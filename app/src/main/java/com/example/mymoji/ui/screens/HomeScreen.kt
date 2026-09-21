@@ -10,17 +10,21 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import com.example.mymoji.R
+import com.example.mymoji.presentation.viewmodel.EmojiUiState
 import com.example.mymoji.ui.theme.MymojiTheme
 
 @Composable
 fun HomeScreen(
-    onRandomEmojiClick: () -> Unit = {},
+    uiState: EmojiUiState = EmojiUiState.Idle,
+    onGetEmojiClick: () -> Unit = {},
     onEmojiListClick: () -> Unit = {},
     onGitHubSearch: (String) -> Unit = {},
     onAvatarListClick: () -> Unit = {},
@@ -38,13 +42,27 @@ fun HomeScreen(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Spacer(modifier = Modifier.height(24.dp))
-        
-        // Stylish Emoji Header
-        Text(
-            text = "😎",
-            fontSize = 120.sp,
-            modifier = Modifier.padding(vertical = 32.dp)
-        )
+
+        // Emoji header: shows the default emoji until a random one has been fetched,
+        // then that fetched emoji replaces it in place.
+        val fetchedEmoji = (uiState as? EmojiUiState.Success)?.currentRandomEmoji
+        Box(
+            modifier = Modifier
+                .size(72.dp)
+                .padding(vertical = 16.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            when {
+                uiState is EmojiUiState.Loading -> CircularProgressIndicator()
+                fetchedEmoji != null -> AsyncImage(
+                    model = fetchedEmoji.url,
+                    contentDescription = fetchedEmoji.name,
+                    modifier = Modifier.fillMaxSize(),
+                    contentScale = ContentScale.Fit
+                )
+                else -> Text(text = "😎", fontSize = 72.sp)
+            }
+        }
 
         Text(
             text = stringResource(R.string.home_title),
@@ -53,13 +71,24 @@ fun HomeScreen(
             color = MaterialTheme.colorScheme.onBackground
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(8.dp))
+
+        if (uiState is EmojiUiState.Error) {
+            Text(
+                text = uiState.message,
+                color = MaterialTheme.colorScheme.error,
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.padding(16.dp)
+            )
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
 
         // First 2 menu items
         MenuPanel(
             title = stringResource(R.string.menu_random_emoji),
             icon = Icons.Default.Refresh,
-            onClick = onRandomEmojiClick
+            onClick = onGetEmojiClick
         )
 
         MenuPanel(
