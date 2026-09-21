@@ -1,0 +1,10 @@
+<resources>
+    <string name="home_title">Mymoji Explorer</string>
+    <string name="menu_random_emoji">Zufälliges Emoji</string>
+    <string name="menu_emoji_list">Emoji-Liste</string>
+    <string name="search_hint">GitHub-Benutzernamen eingeben</string>
+    <string name="search_placeholder">z.B. google</string>
+    <string name="menu_avatar_list">Avatar-Liste</string>
+    <string name="menu_google_repos">Google Repositories</string>
+    <string name="search_description">Suche</string>
+</resources>

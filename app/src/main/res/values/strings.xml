@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">Mymoji</string>
+    <string name="home_title">Mymoji Explorer</string>
+    <string name="menu_random_emoji">Random Emoji</string>
+    <string name="menu_emoji_list">Emoji List</string>
+    <string name="search_hint">Insert GitHub Username</string>
+    <string name="search_placeholder">e.g. google</string>
+    <string name="menu_avatar_list">Avatar List</string>
+    <string name="menu_google_repos">Google Repos</string>
+    <string name="search_description">Search</string>
 </resources>
