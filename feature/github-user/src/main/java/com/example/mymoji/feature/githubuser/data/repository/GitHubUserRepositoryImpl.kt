@@ -27,4 +27,16 @@ class GitHubUserRepositoryImpl(
         Timber.d("Persisted GitHub user '${user.login}' to local cache")
         return user
     }
+
+    override suspend fun getAllUsers(): List<GitHubUser> {
+        return gitHubUserDao.getAllUsers().toDomain()
+    }
+
+    override suspend fun deleteUser(username: String) {
+        gitHubUserDao.deleteUser(username)
+    }
+
+    override suspend fun getCachedUser(username: String): GitHubUser? {
+        return gitHubUserDao.getUser(username)?.toDomain()
+    }
 }

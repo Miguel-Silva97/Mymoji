@@ -2,13 +2,15 @@ package com.example.mymoji.ui.screens
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
@@ -21,6 +23,10 @@ import com.example.mymoji.feature.emoji.presentation.EmojiUiState
 import com.example.mymoji.feature.githubuser.presentation.GitHubUserUiState
 import com.example.mymoji.feature.githubuser.ui.GitHubUserSearch
 
+// Tracks which of the two features most recently produced a result, so the
+// header box below can show whichever one the user last asked for.
+private enum class ActiveHeader { Emoji, GitHubUser }
+
 @Composable
 fun HomeScreen(
     uiState: EmojiUiState = EmojiUiState.Idle,
@@ -32,6 +38,22 @@ fun HomeScreen(
     onGoogleReposClick: () -> Unit = {}
 ) {
     val scrollState = rememberScrollState()
+    var activeHeader by remember { mutableStateOf(ActiveHeader.Emoji) }
+    var headerLocked by remember { mutableStateOf(false) }
+
+    LaunchedEffect(uiState, gitHubUserUiState) {
+        if (headerLocked) return@LaunchedEffect
+        when {
+            gitHubUserUiState is GitHubUserUiState.Success -> {
+                activeHeader = ActiveHeader.GitHubUser
+                headerLocked = true
+            }
+            uiState is EmojiUiState.Success && uiState.currentRandomEmoji != null -> {
+                activeHeader = ActiveHeader.Emoji
+                headerLocked = true
+            }
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -43,22 +65,29 @@ fun HomeScreen(
     ) {
         Spacer(modifier = Modifier.height(24.dp))
 
-        // Emoji header: shows the default emoji until a random one has been fetched,
-        // then that fetched emoji replaces it in place.
         val fetchedEmoji = (uiState as? EmojiUiState.Success)?.currentRandomEmoji
+        val fetchedUser = (gitHubUserUiState as? GitHubUserUiState.Success)?.user
         Box(
-            modifier = Modifier
-                .size(72.dp)
-                .padding(vertical = 16.dp),
+            modifier = Modifier.size(96.dp),
             contentAlignment = Alignment.Center
         ) {
             when {
-                uiState is EmojiUiState.Loading -> CircularProgressIndicator()
-                fetchedEmoji != null -> AsyncImage(
+                activeHeader == ActiveHeader.Emoji && uiState is EmojiUiState.Loading -> CircularProgressIndicator()
+                activeHeader == ActiveHeader.Emoji && fetchedEmoji != null -> AsyncImage(
                     model = fetchedEmoji.url,
                     contentDescription = fetchedEmoji.name,
                     modifier = Modifier.fillMaxSize(),
                     contentScale = ContentScale.Fit
+                )
+                activeHeader == ActiveHeader.GitHubUser && gitHubUserUiState is GitHubUserUiState.Loading ->
+                    CircularProgressIndicator()
+                activeHeader == ActiveHeader.GitHubUser && fetchedUser != null -> AsyncImage(
+                    model = fetchedUser.avatarUrl,
+                    contentDescription = fetchedUser.login,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .clip(CircleShape),
+                    contentScale = ContentScale.Crop
                 )
                 else -> Text(text = "😎", fontSize = 36.sp)
             }
@@ -73,9 +102,14 @@ fun HomeScreen(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        if (uiState is EmojiUiState.Error) {
+        val errorMessage = when {
+            activeHeader == ActiveHeader.Emoji && uiState is EmojiUiState.Error -> uiState.message
+            activeHeader == ActiveHeader.GitHubUser && gitHubUserUiState is GitHubUserUiState.Error -> gitHubUserUiState.message
+            else -> null
+        }
+        if (errorMessage != null) {
             Text(
-                text = uiState.message,
+                text = errorMessage,
                 color = MaterialTheme.colorScheme.error,
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.padding(16.dp)
@@ -88,7 +122,11 @@ fun HomeScreen(
         MenuPanel(
             title = stringResource(R.string.menu_random_emoji),
             icon = Icons.Default.Refresh,
-            onClick = onGetEmojiClick
+            onClick = {
+                activeHeader = ActiveHeader.Emoji
+                headerLocked = true
+                onGetEmojiClick()
+            }
         )
 
         MenuPanel(
@@ -98,8 +136,11 @@ fun HomeScreen(
         )
 
         GitHubUserSearch(
-            uiState = gitHubUserUiState,
-            onSearch = onGitHubSearch
+            onSearch = { username ->
+                activeHeader = ActiveHeader.GitHubUser
+                headerLocked = true
+                onGitHubSearch(username)
+            }
         )
 
         // Bottom 2 menu items

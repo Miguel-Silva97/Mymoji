@@ -4,6 +4,7 @@ import com.example.mymoji.core.data.EmojiDao
 import com.example.mymoji.feature.emoji.data.remote.EmojiApiService
 import com.example.mymoji.feature.emoji.data.repository.EmojiRepositoryImpl
 import com.example.mymoji.feature.emoji.domain.repository.EmojiRepository
+import com.example.mymoji.feature.emoji.domain.usecase.GetCachedEmojiUseCase
 import com.example.mymoji.feature.emoji.domain.usecase.GetEmojisUseCase
 import dagger.Module
 import dagger.Provides
@@ -32,5 +33,11 @@ object EmojiModule {
     @Singleton
     fun provideGetEmojisUseCase(repository: EmojiRepository): GetEmojisUseCase {
         return GetEmojisUseCase(repository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetCachedEmojiUseCase(repository: EmojiRepository): GetCachedEmojiUseCase {
+        return GetCachedEmojiUseCase(repository)
     }
 }

@@ -2,4 +2,7 @@
     <string name="search_hint">GitHub-Benutzernamen eingeben</string>
     <string name="search_placeholder">z.B. google</string>
     <string name="search_description">Suche</string>
+    <string name="back_description">Zurück</string>
+    <string name="avatar_list_title">Avatar-Liste</string>
+    <string name="avatar_list_empty">Noch keine Benutzer. Suche zuerst nach einem GitHub-Benutzernamen.</string>
 </resources>

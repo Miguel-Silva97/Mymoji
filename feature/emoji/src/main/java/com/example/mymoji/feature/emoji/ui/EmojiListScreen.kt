@@ -22,8 +22,6 @@ import com.example.mymoji.feature.emoji.domain.model.Emoji
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-// Cosmetic only: the actual reset is instant, this just keeps the refresh
-// spinner visible long enough to read as a real refresh instead of a flash.
 private const val REFRESH_INDICATOR_DELAY_MS = 300L
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -32,10 +30,7 @@ fun EmojiListScreen(
     emojis: List<Emoji>,
     onBackClick: () -> Unit = {}
 ) {
-    // In-memory copy this screen renders and mutates. Tapping an emoji removes it
-    // from this list only — the Room-backed cache behind `emojis` is never touched,
-    // so pull-to-refresh can restore the full list without re-hitting the network.
-    val displayedEmojis = remember(emojis) { mutableStateListOf(*emojis.toTypedArray()) }
+    val displayedEmojis = remember(emojis) { emojis.toMutableStateList() }
     var isRefreshing by remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
 

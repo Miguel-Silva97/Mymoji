@@ -2,4 +2,7 @@
     <string name="search_hint">Insertar Usuario de GitHub</string>
     <string name="search_placeholder">ej. google</string>
     <string name="search_description">Buscar</string>
+    <string name="back_description">Atrás</string>
+    <string name="avatar_list_title">Lista de Avatares</string>
+    <string name="avatar_list_empty">Aún no hay usuarios. Busca primero un usuario de GitHub.</string>
 </resources>

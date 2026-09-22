@@ -11,6 +11,9 @@ interface EmojiDao {
     @Query("SELECT * FROM emojis ORDER BY name ASC")
     suspend fun getAllEmojis(): List<EmojiEntity>
 
+    @Query("SELECT * FROM emojis WHERE name = :name LIMIT 1")
+    suspend fun getEmoji(name: String): EmojiEntity?
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(emojis: List<EmojiEntity>)
 }

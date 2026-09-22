@@ -8,10 +8,15 @@ import androidx.room.Query
 @Dao
 interface GitHubUserDao {
 
-    // GitHub usernames are case-insensitive, so match regardless of case.
-    @Query("SELECT * FROM github_users WHERE login = :login COLLATE NOCASE LIMIT 1")
+    @Query("SELECT * FROM github_users WHERE login = :login LIMIT 1")
     suspend fun getUser(login: String): GitHubUserEntity?
+
+    @Query("SELECT * FROM github_users ORDER BY login ASC")
+    suspend fun getAllUsers(): List<GitHubUserEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(user: GitHubUserEntity)
+
+    @Query("DELETE FROM github_users WHERE login = :login")
+    suspend fun deleteUser(login: String)
 }

@@ -2,4 +2,7 @@
     <string name="search_hint">Insert GitHub Username</string>
     <string name="search_placeholder">e.g. google</string>
     <string name="search_description">Search</string>
+    <string name="back_description">Back</string>
+    <string name="avatar_list_title">Avatar List</string>
+    <string name="avatar_list_empty">No users yet. Search for a GitHub username first.</string>
 </resources>

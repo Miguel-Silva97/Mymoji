@@ -4,4 +4,6 @@ import com.example.mymoji.feature.emoji.domain.model.Emoji
 
 interface EmojiRepository {
     suspend fun getEmojis(): List<Emoji>
+
+    suspend fun getCachedEmoji(name: String): Emoji?
 }

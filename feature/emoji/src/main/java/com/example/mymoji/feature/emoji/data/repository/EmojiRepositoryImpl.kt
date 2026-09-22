@@ -15,8 +15,6 @@ class EmojiRepositoryImpl(
     private val emojiDao: EmojiDao
 ) : EmojiRepository {
 
-    // Guards the check-then-fetch sequence below so concurrent calls can't both
-    // miss the cache and each burn a request against the GitHub API rate limit.
     private val mutex = Mutex()
 
     override suspend fun getEmojis(): List<Emoji> = mutex.withLock {
@@ -35,5 +33,9 @@ class EmojiRepositoryImpl(
         emojiDao.insertAll(mappedList.toEntity())
         Timber.d("Persisted ${mappedList.size} emojis to local cache")
         return@withLock mappedList
+    }
+
+    override suspend fun getCachedEmoji(name: String): Emoji? {
+        return emojiDao.getEmoji(name)?.toDomain()
     }
 }

@@ -4,7 +4,10 @@ import com.example.mymoji.core.data.GitHubUserDao
 import com.example.mymoji.feature.githubuser.data.remote.GitHubUserApiService
 import com.example.mymoji.feature.githubuser.data.repository.GitHubUserRepositoryImpl
 import com.example.mymoji.feature.githubuser.domain.repository.GitHubUserRepository
+import com.example.mymoji.feature.githubuser.domain.usecase.DeleteGitHubUserUseCase
+import com.example.mymoji.feature.githubuser.domain.usecase.GetCachedGitHubUserUseCase
 import com.example.mymoji.feature.githubuser.domain.usecase.GetGitHubUserUseCase
+import com.example.mymoji.feature.githubuser.domain.usecase.GetGitHubUsersUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -35,5 +38,23 @@ object GitHubUserModule {
     @Singleton
     fun provideGetGitHubUserUseCase(repository: GitHubUserRepository): GetGitHubUserUseCase {
         return GetGitHubUserUseCase(repository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetGitHubUsersUseCase(repository: GitHubUserRepository): GetGitHubUsersUseCase {
+        return GetGitHubUsersUseCase(repository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideDeleteGitHubUserUseCase(repository: GitHubUserRepository): DeleteGitHubUserUseCase {
+        return DeleteGitHubUserUseCase(repository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetCachedGitHubUserUseCase(repository: GitHubUserRepository): GetCachedGitHubUserUseCase {
+        return GetCachedGitHubUserUseCase(repository)
     }
 }
