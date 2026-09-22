@@ -1,0 +1,5 @@
+<resources>
+    <string name="emoji_list_title">Lista de Emojis</string>
+    <string name="back_description">Voltar</string>
+    <string name="emoji_list_empty">Ainda não há emojis. Toque em Emoji Aleatório para começar.</string>
+</resources>

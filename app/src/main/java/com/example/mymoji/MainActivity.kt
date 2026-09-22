@@ -14,9 +14,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import com.example.mymoji.presentation.viewmodel.EmojiUiState
-import com.example.mymoji.presentation.viewmodel.EmojiViewModel
-import com.example.mymoji.ui.screens.EmojiListScreen
+import com.example.mymoji.feature.emoji.presentation.EmojiUiState
+import com.example.mymoji.feature.emoji.presentation.EmojiViewModel
+import com.example.mymoji.feature.emoji.ui.EmojiListScreen
+import com.example.mymoji.feature.githubuser.presentation.GitHubUserViewModel
 import com.example.mymoji.ui.screens.HomeScreen
 import com.example.mymoji.ui.theme.MymojiTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -25,6 +26,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     private val viewModel: EmojiViewModel by viewModels()
+    private val gitHubUserViewModel: GitHubUserViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,6 +37,7 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     val uiState by viewModel.uiState.collectAsState()
+                    val gitHubUserUiState by gitHubUserViewModel.uiState.collectAsState()
                     var showEmojiList by remember { mutableStateOf(false) }
 
                     if (showEmojiList) {
@@ -46,8 +49,10 @@ class MainActivity : ComponentActivity() {
                     } else {
                         HomeScreen(
                             uiState = uiState,
+                            gitHubUserUiState = gitHubUserUiState,
                             onGetEmojiClick = { viewModel.fetchAndPickRandomEmoji() },
-                            onEmojiListClick = { showEmojiList = true }
+                            onEmojiListClick = { showEmojiList = true },
+                            onGitHubSearch = { username -> gitHubUserViewModel.searchUser(username) }
                         )
                     }
                 }

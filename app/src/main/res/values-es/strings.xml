@@ -2,11 +2,6 @@
     <string name="home_title">Explorador de Mymoji</string>
     <string name="menu_random_emoji">Emoji Aleatorio</string>
     <string name="menu_emoji_list">Lista de Emojis</string>
-    <string name="search_hint">Insertar Usuario de GitHub</string>
-    <string name="search_placeholder">ej. google</string>
     <string name="menu_avatar_list">Lista de Avatares</string>
     <string name="menu_google_repos">Repositorios de Google</string>
-    <string name="search_description">Buscar</string>
-    <string name="back_description">Atrás</string>
-    <string name="emoji_list_empty">Aún no hay emojis. Toca Emoji Aleatorio para empezar.</string>
 </resources>

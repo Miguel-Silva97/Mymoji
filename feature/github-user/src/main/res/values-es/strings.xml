@@ -1,0 +1,5 @@
+<resources>
+    <string name="search_hint">Insertar Usuario de GitHub</string>
+    <string name="search_placeholder">ej. google</string>
+    <string name="search_description">Buscar</string>
+</resources>

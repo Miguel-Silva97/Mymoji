@@ -1,0 +1,5 @@
+<resources>
+    <string name="emoji_list_title">Emoji List</string>
+    <string name="back_description">Back</string>
+    <string name="emoji_list_empty">No emojis yet. Tap Random Emoji to get started.</string>
+</resources>

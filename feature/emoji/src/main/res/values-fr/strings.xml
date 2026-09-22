@@ -1,0 +1,5 @@
+<resources>
+    <string name="emoji_list_title">Liste d\'Emojis</string>
+    <string name="back_description">Retour</string>
+    <string name="emoji_list_empty">Pas encore d\'emojis. Appuyez sur Emoji Aléatoire pour commencer.</string>
+</resources>

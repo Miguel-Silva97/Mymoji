@@ -1,0 +1,5 @@
+<resources>
+    <string name="search_hint">GitHub-Benutzernamen eingeben</string>
+    <string name="search_placeholder">z.B. google</string>
+    <string name="search_description">Suche</string>
+</resources>

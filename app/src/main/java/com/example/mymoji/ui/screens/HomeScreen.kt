@@ -6,7 +6,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -17,18 +17,20 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.mymoji.R
-import com.example.mymoji.presentation.viewmodel.EmojiUiState
+import com.example.mymoji.feature.emoji.presentation.EmojiUiState
+import com.example.mymoji.feature.githubuser.presentation.GitHubUserUiState
+import com.example.mymoji.feature.githubuser.ui.GitHubUserSearch
 
 @Composable
 fun HomeScreen(
     uiState: EmojiUiState = EmojiUiState.Idle,
+    gitHubUserUiState: GitHubUserUiState = GitHubUserUiState.Idle,
     onGetEmojiClick: () -> Unit = {},
     onEmojiListClick: () -> Unit = {},
     onGitHubSearch: (String) -> Unit = {},
     onAvatarListClick: () -> Unit = {},
     onGoogleReposClick: () -> Unit = {}
 ) {
-    var githubUsername by remember { mutableStateOf("") }
     val scrollState = rememberScrollState()
 
     Column(
@@ -95,11 +97,9 @@ fun HomeScreen(
             onClick = onEmojiListClick
         )
 
-        // GitHub Search Field
-        GitHubSearchField(
-            value = githubUsername,
-            onValueChange = { githubUsername = it },
-            onSearch = { onGitHubSearch(githubUsername) }
+        GitHubUserSearch(
+            uiState = gitHubUserUiState,
+            onSearch = onGitHubSearch
         )
 
         // Bottom 2 menu items
@@ -161,34 +161,4 @@ fun MenuPanel(
             )
         }
     }
-}
-
-@Composable
-fun GitHubSearchField(
-    value: String,
-    onValueChange: (String) -> Unit,
-    onSearch: () -> Unit
-) {
-    OutlinedTextField(
-        value = value,
-        onValueChange = onValueChange,
-        modifier = Modifier.fillMaxWidth(),
-        label = { Text(stringResource(R.string.search_hint)) },
-        placeholder = { Text(stringResource(R.string.search_placeholder)) },
-        singleLine = true,
-        shape = MaterialTheme.shapes.large,
-        trailingIcon = {
-            IconButton(onClick = onSearch) {
-                Icon(
-                    imageVector = Icons.Default.Search,
-                    contentDescription = stringResource(R.string.search_description),
-                    tint = MaterialTheme.colorScheme.primary
-                )
-            }
-        },
-        colors = OutlinedTextFieldDefaults.colors(
-            focusedBorderColor = MaterialTheme.colorScheme.primary,
-            unfocusedBorderColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.3f)
-        )
-    )
 }

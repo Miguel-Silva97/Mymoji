@@ -1,0 +1,5 @@
+<resources>
+    <string name="emoji_list_title">Emoji-Liste</string>
+    <string name="back_description">Zurück</string>
+    <string name="emoji_list_empty">Noch keine Emojis. Tippe auf Zufälliges Emoji, um loszulegen.</string>
+</resources>

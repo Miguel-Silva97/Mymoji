@@ -24,3 +24,6 @@ dependencyResolutionManagement {
 
 rootProject.name = "Mymoji"
 include(":app")
+include(":core:data")
+include(":feature:emoji")
+include(":feature:github-user")

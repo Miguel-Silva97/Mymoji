@@ -1,0 +1,5 @@
+<resources>
+    <string name="emoji_list_title">Lista delle Emoji</string>
+    <string name="back_description">Indietro</string>
+    <string name="emoji_list_empty">Nessuna emoji ancora. Tocca Emoji Casuale per iniziare.</string>
+</resources>
