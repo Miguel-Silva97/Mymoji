@@ -13,13 +13,11 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.mymoji.R
 import com.example.mymoji.presentation.viewmodel.EmojiUiState
-import com.example.mymoji.ui.theme.MymojiTheme
 
 @Composable
 fun HomeScreen(
@@ -60,7 +58,7 @@ fun HomeScreen(
                     modifier = Modifier.fillMaxSize(),
                     contentScale = ContentScale.Fit
                 )
-                else -> Text(text = "😎", fontSize = 72.sp)
+                else -> Text(text = "😎", fontSize = 36.sp)
             }
         }
 
@@ -193,12 +191,4 @@ fun GitHubSearchField(
             unfocusedBorderColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.3f)
         )
     )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun HomeScreenPreview() {
-    MymojiTheme {
-        HomeScreen()
-    }
 }

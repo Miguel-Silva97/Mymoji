@@ -7,4 +7,6 @@
     <string name="menu_avatar_list">Liste d\'Avatars</string>
     <string name="menu_google_repos">Dépôts Google</string>
     <string name="search_description">Rechercher</string>
+    <string name="back_description">Retour</string>
+    <string name="emoji_list_empty">Pas encore d\'emojis. Appuyez sur Emoji Aléatoire pour commencer.</string>
 </resources>

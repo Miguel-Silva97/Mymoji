@@ -8,4 +8,6 @@
     <string name="menu_avatar_list">Avatar List</string>
     <string name="menu_google_repos">Google Repos</string>
     <string name="search_description">Search</string>
+    <string name="back_description">Back</string>
+    <string name="emoji_list_empty">No emojis yet. Tap Random Emoji to get started.</string>
 </resources>

@@ -7,4 +7,6 @@
     <string name="menu_avatar_list">Lista de Avatares</string>
     <string name="menu_google_repos">Repositórios do Google</string>
     <string name="search_description">Pesquisar</string>
+    <string name="back_description">Voltar</string>
+    <string name="emoji_list_empty">Ainda não há emojis. Toque em Emoji Aleatório para começar.</string>
 </resources>
