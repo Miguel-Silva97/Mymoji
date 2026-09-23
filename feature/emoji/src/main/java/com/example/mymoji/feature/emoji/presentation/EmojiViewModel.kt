@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -55,6 +56,7 @@ class EmojiViewModel @Inject constructor(
     private suspend fun loadEmojisIfNeeded(): List<Emoji>? {
         val currentState = _uiState.value
         if (currentState is EmojiUiState.Success && currentState.emojis.isNotEmpty()) {
+            Timber.d("Returning emojies from cache")
             return currentState.emojis
         }
 
