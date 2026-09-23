@@ -20,7 +20,6 @@ object DatabaseModule {
     @Singleton
     fun provideMymojiDatabase(@ApplicationContext context: Context): MymojiDatabase {
         return Room.databaseBuilder(context, MymojiDatabase::class.java, "mymoji.db")
-            // Both tables are just caches for GitHub API responses, safe to rebuild on schema changes.
             .fallbackToDestructiveMigration(dropAllTables = true)
             .build()
     }

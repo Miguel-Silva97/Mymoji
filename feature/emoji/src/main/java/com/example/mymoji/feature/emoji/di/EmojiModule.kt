@@ -1,11 +1,9 @@
 package com.example.mymoji.feature.emoji.di
 
-import com.example.mymoji.core.data.EmojiDao
 import com.example.mymoji.feature.emoji.data.remote.EmojiApiService
 import com.example.mymoji.feature.emoji.data.repository.EmojiRepositoryImpl
 import com.example.mymoji.feature.emoji.domain.repository.EmojiRepository
-import com.example.mymoji.feature.emoji.domain.usecase.GetCachedEmojiUseCase
-import com.example.mymoji.feature.emoji.domain.usecase.GetEmojisUseCase
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -15,29 +13,17 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object EmojiModule {
+abstract class EmojiModule {
 
-    @Provides
-    @Singleton
-    fun provideEmojiApiService(retrofit: Retrofit): EmojiApiService {
-        return retrofit.create(EmojiApiService::class.java)
-    }
+    @Binds
+    abstract fun bindEmojiRepository(impl: EmojiRepositoryImpl): EmojiRepository
 
-    @Provides
-    @Singleton
-    fun provideEmojiRepository(apiService: EmojiApiService, emojiDao: EmojiDao): EmojiRepository {
-        return EmojiRepositoryImpl(apiService, emojiDao)
-    }
+    companion object {
 
-    @Provides
-    @Singleton
-    fun provideGetEmojisUseCase(repository: EmojiRepository): GetEmojisUseCase {
-        return GetEmojisUseCase(repository)
-    }
-
-    @Provides
-    @Singleton
-    fun provideGetCachedEmojiUseCase(repository: EmojiRepository): GetCachedEmojiUseCase {
-        return GetCachedEmojiUseCase(repository)
+        @Provides
+        @Singleton
+        fun provideEmojiApiService(retrofit: Retrofit): EmojiApiService {
+            return retrofit.create(EmojiApiService::class.java)
+        }
     }
 }

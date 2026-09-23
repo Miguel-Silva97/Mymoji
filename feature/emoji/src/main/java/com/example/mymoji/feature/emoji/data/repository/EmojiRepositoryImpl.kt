@@ -9,8 +9,11 @@ import com.example.mymoji.feature.emoji.domain.repository.EmojiRepository
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import timber.log.Timber
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class EmojiRepositoryImpl(
+@Singleton
+class EmojiRepositoryImpl @Inject constructor(
     private val apiService: EmojiApiService,
     private val emojiDao: EmojiDao
 ) : EmojiRepository {

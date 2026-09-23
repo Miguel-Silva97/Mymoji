@@ -7,8 +7,11 @@ import com.example.mymoji.feature.githubuser.data.remote.GitHubUserApiService
 import com.example.mymoji.feature.githubuser.domain.model.GitHubUser
 import com.example.mymoji.feature.githubuser.domain.repository.GitHubUserRepository
 import timber.log.Timber
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class GitHubUserRepositoryImpl(
+@Singleton
+class GitHubUserRepositoryImpl @Inject constructor(
     private val apiService: GitHubUserApiService,
     private val gitHubUserDao: GitHubUserDao
 ) : GitHubUserRepository {

@@ -5,6 +5,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -118,7 +119,6 @@ fun HomeScreen(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // First 2 menu items
         MenuPanel(
             title = stringResource(R.string.menu_random_emoji),
             icon = Icons.Default.Refresh,
@@ -143,7 +143,6 @@ fun HomeScreen(
             }
         )
 
-        // Bottom 2 menu items
         MenuPanel(
             title = stringResource(R.string.menu_avatar_list),
             icon = Icons.Default.Person,
@@ -196,7 +195,7 @@ fun MenuPanel(
             )
             Spacer(modifier = Modifier.weight(1f))
             Icon(
-                imageVector = Icons.Default.ArrowForward,
+                imageVector = Icons.AutoMirrored.Filled.ArrowForward,
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
             )
