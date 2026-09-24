@@ -42,6 +42,7 @@ dependencies {
     // Feature modules
     implementation(project(":feature:emoji"))
     implementation(project(":feature:github-user"))
+    implementation(project(":core:data"))
 
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.core.ktx)
@@ -64,6 +65,8 @@ dependencies {
     implementation(libs.timber)
 
     testImplementation(libs.junit)
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.mockk)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.junit)
 }

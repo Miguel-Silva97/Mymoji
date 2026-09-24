@@ -5,4 +5,7 @@
     <string name="back_description">Atrás</string>
     <string name="avatar_list_title">Lista de Avatares</string>
     <string name="avatar_list_empty">Aún no hay usuarios. Busca primero un usuario de GitHub.</string>
+    <string name="error_rate_limited">Lamentablemente no se puede obtener en este momento</string>
+    <string name="error_user_not_found">Lamentablemente no se pudo encontrar este usuario de GitHub</string>
+    <string name="error_unknown">Se produjo un error desconocido</string>
 </resources>

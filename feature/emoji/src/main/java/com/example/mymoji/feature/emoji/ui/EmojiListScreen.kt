@@ -19,21 +19,15 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.mymoji.feature.emoji.R
 import com.example.mymoji.feature.emoji.domain.model.Emoji
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-
-private const val REFRESH_INDICATOR_DELAY_MS = 300L
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EmojiListScreen(
     emojis: List<Emoji>,
+    onEmojiClick: (Emoji) -> Unit = {},
+    onRefresh: () -> Unit = {},
     onBackClick: () -> Unit = {}
 ) {
-    val displayedEmojis = remember(emojis) { emojis.toMutableStateList() }
-    var isRefreshing by remember { mutableStateOf(false) }
-    val coroutineScope = rememberCoroutineScope()
-
     Scaffold(
         topBar = {
             TopAppBar(
@@ -50,21 +44,13 @@ fun EmojiListScreen(
         }
     ) { paddingValues ->
         PullToRefreshBox(
-            isRefreshing = isRefreshing,
-            onRefresh = {
-                coroutineScope.launch {
-                    isRefreshing = true
-                    delay(REFRESH_INDICATOR_DELAY_MS)
-                    displayedEmojis.clear()
-                    displayedEmojis.addAll(emojis)
-                    isRefreshing = false
-                }
-            },
+            isRefreshing = false,
+            onRefresh = onRefresh,
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
-            if (displayedEmojis.isEmpty()) {
+            if (emojis.isEmpty()) {
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
@@ -85,10 +71,10 @@ fun EmojiListScreen(
                     verticalArrangement = Arrangement.spacedBy(12.dp),
                     modifier = Modifier.fillMaxSize()
                 ) {
-                    items(displayedEmojis, key = { it.name }) { emoji ->
+                    items(emojis, key = { it.name }) { emoji ->
                         EmojiGridItem(
                             emoji = emoji,
-                            onClick = { displayedEmojis.remove(emoji) }
+                            onClick = { onEmojiClick(emoji) }
                         )
                     }
                 }

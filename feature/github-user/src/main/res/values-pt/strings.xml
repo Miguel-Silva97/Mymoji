@@ -1,8 +1,11 @@
 <resources>
-    <string name="search_hint">Inserir Nome de Usuário do GitHub</string>
+    <string name="search_hint">Inserir Nome de Utilizador do GitHub</string>
     <string name="search_placeholder">ex. google</string>
     <string name="search_description">Pesquisar</string>
     <string name="back_description">Voltar</string>
     <string name="avatar_list_title">Lista de Avatares</string>
-    <string name="avatar_list_empty">Ainda não há usuários. Pesquise primeiro um nome de usuário do GitHub.</string>
+    <string name="avatar_list_empty">Ainda não há utilizadores. Pesquise primeiro um nome de utilizador do GitHub.</string>
+    <string name="error_rate_limited">Infelizmente não é possível obter os dados de momento</string>
+    <string name="error_user_not_found">Infelizmente este utilizador do GitHub não foi encontrado</string>
+    <string name="error_unknown">Ocorreu um erro desconhecido</string>
 </resources>

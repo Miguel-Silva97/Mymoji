@@ -1,59 +1,56 @@
 package com.example.mymoji.core.data
 
-import android.content.Context
 import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.SharedPreferencesMigration
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.stringPreferencesKey
-import androidx.datastore.preferences.preferencesDataStore
-import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.flow.first
+import com.example.mymoji.core.data.proto.DisplayHistory
+import com.example.mymoji.core.data.proto.DisplayedItem
+import com.example.mymoji.core.data.proto.displayHistory
+import com.example.mymoji.core.data.proto.displayedItem
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import javax.inject.Singleton
 
-private const val DATASTORE_NAME = "last_displayed_item"
-
-private val Context.lastDisplayedItemDataStore: DataStore<Preferences> by preferencesDataStore(
-    name = DATASTORE_NAME,
-    produceMigrations = { context -> listOf(SharedPreferencesMigration(context, DATASTORE_NAME)) }
-)
-
 @Singleton
 class LastDisplayedItemStore @Inject constructor(
-    @ApplicationContext context: Context
+    private val dataStore: DataStore<DisplayHistory>
 ) {
-    private val dataStore = context.lastDisplayedItemDataStore
 
-    suspend fun save(item: LastDisplayedItem) {
-        dataStore.edit { prefs ->
-            when (item) {
-                is LastDisplayedItem.Emoji -> {
-                    prefs[KEY_TYPE] = TYPE_EMOJI
-                    prefs[KEY_VALUE] = item.name
-                }
-                is LastDisplayedItem.GitHubUser -> {
-                    prefs[KEY_TYPE] = TYPE_GITHUB_USER
-                    prefs[KEY_VALUE] = item.login
-                }
-            }
+    val history: Flow<List<LastDisplayedItem>> = dataStore.data.map { it.toDomain() }
+
+    suspend fun save(item: LastDisplayedItem) = editHistory { history ->
+        (listOf(item) + history.filterNot { it == item }).take(MAX_HISTORY_SIZE)
+    }
+
+    suspend fun removeEmoji(name: String) = remove(LastDisplayedItem.Emoji(name))
+
+    suspend fun removeGitHubUser(login: String) = remove(LastDisplayedItem.GitHubUser(login))
+
+    private suspend fun remove(item: LastDisplayedItem) = editHistory { history ->
+        history.filterNot { it == item }
+    }
+
+    private suspend fun editHistory(transform: (List<LastDisplayedItem>) -> List<LastDisplayedItem>) {
+        dataStore.updateData { stored ->
+            displayHistory { items += transform(stored.toDomain()).map { it.toProto() } }
         }
     }
 
-    suspend fun load(): LastDisplayedItem? {
-        val prefs = dataStore.data.first()
-        val value = prefs[KEY_VALUE] ?: return null
-        return when (prefs[KEY_TYPE]) {
-            TYPE_EMOJI -> LastDisplayedItem.Emoji(value)
-            TYPE_GITHUB_USER -> LastDisplayedItem.GitHubUser(value)
-            else -> null
+    private fun DisplayHistory.toDomain(): List<LastDisplayedItem> = itemsList.mapNotNull { item ->
+        when (item.itemCase) {
+            DisplayedItem.ItemCase.EMOJI_NAME -> LastDisplayedItem.Emoji(item.emojiName)
+            DisplayedItem.ItemCase.GITHUB_LOGIN -> LastDisplayedItem.GitHubUser(item.githubLogin)
+            DisplayedItem.ItemCase.ITEM_NOT_SET, null -> null
+        }
+    }
+
+    private fun LastDisplayedItem.toProto(): DisplayedItem = displayedItem {
+        when (val item = this@toProto) {
+            is LastDisplayedItem.Emoji -> emojiName = item.name
+            is LastDisplayedItem.GitHubUser -> githubLogin = item.login
         }
     }
 
     private companion object {
-        val KEY_TYPE = stringPreferencesKey("type")
-        val KEY_VALUE = stringPreferencesKey("value")
-        const val TYPE_EMOJI = "emoji"
-        const val TYPE_GITHUB_USER = "github_user"
+        const val MAX_HISTORY_SIZE = 10
     }
 }

@@ -5,4 +5,7 @@
     <string name="back_description">Zurück</string>
     <string name="avatar_list_title">Avatar-Liste</string>
     <string name="avatar_list_empty">Noch keine Benutzer. Suche zuerst nach einem GitHub-Benutzernamen.</string>
+    <string name="error_rate_limited">Leider kann derzeit nichts abgerufen werden</string>
+    <string name="error_user_not_found">Leider konnte dieser GitHub-Benutzer nicht gefunden werden</string>
+    <string name="error_unknown">Ein unbekannter Fehler ist aufgetreten</string>
 </resources>

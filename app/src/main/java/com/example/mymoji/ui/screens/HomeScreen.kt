@@ -9,6 +9,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -23,13 +24,13 @@ import com.example.mymoji.R
 import com.example.mymoji.feature.emoji.presentation.EmojiUiState
 import com.example.mymoji.feature.githubuser.presentation.GitHubUserUiState
 import com.example.mymoji.feature.githubuser.ui.GitHubUserSearch
+import com.example.mymoji.presentation.HeaderItem
 
-// Tracks which of the two features most recently produced a result, so the
-// header box below can show whichever one the user last asked for.
 private enum class ActiveHeader { Emoji, GitHubUser }
 
 @Composable
 fun HomeScreen(
+    headerItem: HeaderItem? = null,
     uiState: EmojiUiState = EmojiUiState.Idle,
     gitHubUserUiState: GitHubUserUiState = GitHubUserUiState.Idle,
     onGetEmojiClick: () -> Unit = {},
@@ -39,22 +40,7 @@ fun HomeScreen(
     onGoogleReposClick: () -> Unit = {}
 ) {
     val scrollState = rememberScrollState()
-    var activeHeader by remember { mutableStateOf(ActiveHeader.Emoji) }
-    var headerLocked by remember { mutableStateOf(false) }
-
-    LaunchedEffect(uiState, gitHubUserUiState) {
-        if (headerLocked) return@LaunchedEffect
-        when {
-            gitHubUserUiState is GitHubUserUiState.Success -> {
-                activeHeader = ActiveHeader.GitHubUser
-                headerLocked = true
-            }
-            uiState is EmojiUiState.Success && uiState.currentRandomEmoji != null -> {
-                activeHeader = ActiveHeader.Emoji
-                headerLocked = true
-            }
-        }
-    }
+    var activeHeader by rememberSaveable { mutableStateOf<ActiveHeader?>(null) }
 
     Column(
         modifier = Modifier
@@ -66,25 +52,27 @@ fun HomeScreen(
     ) {
         Spacer(modifier = Modifier.height(24.dp))
 
-        val fetchedEmoji = (uiState as? EmojiUiState.Success)?.currentRandomEmoji
-        val fetchedUser = (gitHubUserUiState as? GitHubUserUiState.Success)?.user
+        val isActiveLoading = when (activeHeader) {
+            ActiveHeader.Emoji -> uiState is EmojiUiState.Loading
+            ActiveHeader.GitHubUser -> gitHubUserUiState is GitHubUserUiState.Loading
+            null -> false
+        }
+
         Box(
             modifier = Modifier.size(96.dp),
             contentAlignment = Alignment.Center
         ) {
             when {
-                activeHeader == ActiveHeader.Emoji && uiState is EmojiUiState.Loading -> CircularProgressIndicator()
-                activeHeader == ActiveHeader.Emoji && fetchedEmoji != null -> AsyncImage(
-                    model = fetchedEmoji.url,
-                    contentDescription = fetchedEmoji.name,
+                isActiveLoading -> CircularProgressIndicator()
+                headerItem is HeaderItem.EmojiItem -> AsyncImage(
+                    model = headerItem.emoji.url,
+                    contentDescription = headerItem.emoji.name,
                     modifier = Modifier.fillMaxSize(),
                     contentScale = ContentScale.Fit
                 )
-                activeHeader == ActiveHeader.GitHubUser && gitHubUserUiState is GitHubUserUiState.Loading ->
-                    CircularProgressIndicator()
-                activeHeader == ActiveHeader.GitHubUser && fetchedUser != null -> AsyncImage(
-                    model = fetchedUser.avatarUrl,
-                    contentDescription = fetchedUser.login,
+                headerItem is HeaderItem.AvatarItem -> AsyncImage(
+                    model = headerItem.user.avatarUrl,
+                    contentDescription = headerItem.user.login,
                     modifier = Modifier
                         .fillMaxSize()
                         .clip(CircleShape),
@@ -105,7 +93,8 @@ fun HomeScreen(
 
         val errorMessage = when {
             activeHeader == ActiveHeader.Emoji && uiState is EmojiUiState.Error -> uiState.message
-            activeHeader == ActiveHeader.GitHubUser && gitHubUserUiState is GitHubUserUiState.Error -> gitHubUserUiState.message
+            activeHeader == ActiveHeader.GitHubUser && gitHubUserUiState is GitHubUserUiState.Error ->
+                stringResource(gitHubUserUiState.messageRes)
             else -> null
         }
         if (errorMessage != null) {
@@ -124,7 +113,6 @@ fun HomeScreen(
             icon = Icons.Default.Refresh,
             onClick = {
                 activeHeader = ActiveHeader.Emoji
-                headerLocked = true
                 onGetEmojiClick()
             }
         )
@@ -138,7 +126,6 @@ fun HomeScreen(
         GitHubUserSearch(
             onSearch = { username ->
                 activeHeader = ActiveHeader.GitHubUser
-                headerLocked = true
                 onGitHubSearch(username)
             }
         )

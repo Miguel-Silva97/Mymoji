@@ -5,4 +5,7 @@
     <string name="back_description">Back</string>
     <string name="avatar_list_title">Avatar List</string>
     <string name="avatar_list_empty">No users yet. Search for a GitHub username first.</string>
+    <string name="error_rate_limited">Unfortunately cannot fetch at the moment</string>
+    <string name="error_user_not_found">Unfortunately this GitHub user could not be found</string>
+    <string name="error_unknown">Unknown Error occurred</string>
 </resources>
