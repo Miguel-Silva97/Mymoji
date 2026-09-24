@@ -42,6 +42,7 @@ dependencies {
     // Feature modules
     implementation(project(":feature:emoji"))
     implementation(project(":feature:github-user"))
+    implementation(project(":feature:google-repos"))
     implementation(project(":core:data"))
 
     implementation(libs.androidx.appcompat)

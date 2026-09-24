@@ -1,0 +1,12 @@
+<resources>
+    <string name="repos_title">Google Repos</string>
+    <string name="back_description">Back</string>
+    <string name="repos_page_size">Per page</string>
+    <string name="repos_empty">No repositories found.</string>
+    <string name="repos_retry">Retry</string>
+    <string name="error_rate_limited">Unfortunately cannot fetch at the moment</string>
+    <string name="error_repos_unknown">Unfortunately the repositories could not be loaded</string>
+    <string name="repos_previous">Previous</string>
+    <string name="repos_next">Next</string>
+    <string name="repos_page">Page %1$d</string>
+</resources>

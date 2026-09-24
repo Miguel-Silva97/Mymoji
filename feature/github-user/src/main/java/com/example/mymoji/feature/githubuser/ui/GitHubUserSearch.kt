@@ -1,13 +1,17 @@
 package com.example.mymoji.feature.githubuser.ui
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import com.example.mymoji.feature.githubuser.R
 
 @Composable
@@ -16,6 +20,11 @@ fun GitHubUserSearch(
     modifier: Modifier = Modifier
 ) {
     var username by rememberSaveable { mutableStateOf("") }
+    val keyboardController = LocalSoftwareKeyboardController.current
+    val search = {
+        keyboardController?.hide()
+        onSearch(username)
+    }
 
     OutlinedTextField(
         value = username,
@@ -24,9 +33,11 @@ fun GitHubUserSearch(
         label = { Text(stringResource(R.string.search_hint)) },
         placeholder = { Text(stringResource(R.string.search_placeholder)) },
         singleLine = true,
+        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+        keyboardActions = KeyboardActions(onSearch = { search() }),
         shape = MaterialTheme.shapes.large,
         trailingIcon = {
-            IconButton(onClick = { onSearch(username) }) {
+            IconButton(onClick = search) {
                 Icon(
                     imageVector = Icons.Default.Search,
                     contentDescription = stringResource(R.string.search_description),

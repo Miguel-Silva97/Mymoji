@@ -1,0 +1,12 @@
+<resources>
+    <string name="repos_title">Dépôts Google</string>
+    <string name="back_description">Retour</string>
+    <string name="repos_page_size">Par page</string>
+    <string name="repos_empty">Aucun dépôt trouvé.</string>
+    <string name="repos_retry">Réessayer</string>
+    <string name="error_rate_limited">Malheureusement, impossible de récupérer pour le moment</string>
+    <string name="error_repos_unknown">Malheureusement, les dépôts n\'ont pas pu être chargés</string>
+    <string name="repos_previous">Précédent</string>
+    <string name="repos_next">Suivant</string>
+    <string name="repos_page">Page %1$d</string>
+</resources>

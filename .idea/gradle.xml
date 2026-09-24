@@ -15,6 +15,7 @@
             <option value="$PROJECT_DIR$/feature" />
             <option value="$PROJECT_DIR$/feature/emoji" />
             <option value="$PROJECT_DIR$/feature/github-user" />
+            <option value="$PROJECT_DIR$/feature/google-repos" />
           </set>
         </option>
       </GradleProjectSettings>

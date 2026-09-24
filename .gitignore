@@ -16,4 +16,5 @@ local.properties
 core/data/build
 feature/emoji/build
 feature/github-user/build
+feature/google-repos/build
 .kotlin
