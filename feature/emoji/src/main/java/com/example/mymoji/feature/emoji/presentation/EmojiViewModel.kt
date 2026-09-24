@@ -8,6 +8,7 @@ import com.example.mymoji.core.data.LastDisplayedItemStore
 import com.example.mymoji.feature.emoji.domain.model.Emoji
 import com.example.mymoji.feature.emoji.domain.usecase.GetEmojisUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -72,6 +73,8 @@ class EmojiViewModel @Inject constructor(
             val emojiList = getEmojisUseCase()
             _uiState.value = EmojiUiState.Success(emojis = emojiList, removedEmojiNames = removedEmojiNames)
             emojiList
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             _uiState.value = EmojiUiState.Error(message = e.localizedMessage ?: "Unknown Error occurred")
             null

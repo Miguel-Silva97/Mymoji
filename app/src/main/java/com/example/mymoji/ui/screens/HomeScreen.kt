@@ -1,5 +1,6 @@
 package com.example.mymoji.ui.screens
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -16,6 +17,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -31,6 +33,7 @@ private enum class ActiveHeader { Emoji, GitHubUser }
 @Composable
 fun HomeScreen(
     headerItem: HeaderItem? = null,
+    onHeaderClick: () -> Unit = {},
     uiState: EmojiUiState = EmojiUiState.Idle,
     gitHubUserUiState: GitHubUserUiState = GitHubUserUiState.Idle,
     onGetEmojiClick: () -> Unit = {},
@@ -59,7 +62,14 @@ fun HomeScreen(
         }
 
         Box(
-            modifier = Modifier.size(96.dp),
+            modifier = Modifier
+                .size(96.dp)
+                .clip(MaterialTheme.shapes.large)
+                .clickable(
+                    enabled = headerItem != null && !isActiveLoading,
+                    role = Role.Button,
+                    onClick = onHeaderClick
+                ),
             contentAlignment = Alignment.Center
         ) {
             when {

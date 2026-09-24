@@ -9,6 +9,7 @@ import com.example.mymoji.feature.githubuser.domain.usecase.GetGitHubUserUseCase
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -130,6 +131,22 @@ class GitHubUserViewModelTest {
         viewModel.onUserDeleted("octocat")
 
         coVerify(exactly = 1) { lastDisplayedItemStore.removeGitHubUser("octocat") }
+    }
+
+    @Test
+    fun `a newer search wins over an older one that finishes later`() {
+        val otherUser = GitHubUser(login = "otheruser", id = 2, avatarUrl = "otherUser.png")
+        val slowResponse = CompletableDeferred<GitHubUser>()
+        coEvery { repository.getUser("otheruser") } coAnswers { slowResponse.await() }
+        coEvery { repository.getUser("mockuser") } returns mockUser
+        val viewModel = createViewModel()
+
+        viewModel.searchUser("otheruser")
+        viewModel.searchUser("mockuser")
+        slowResponse.complete(otherUser)
+
+        assertEquals(GitHubUserUiState.Success(mockUser), viewModel.uiState.value)
+        coVerify(exactly = 0) { lastDisplayedItemStore.save(LastDisplayedItem.GitHubUser("otheruser")) }
     }
 
     private fun httpException(code: Int) =

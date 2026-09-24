@@ -8,6 +8,8 @@ import com.example.mymoji.core.data.LastDisplayedItemStore
 import com.example.mymoji.feature.githubuser.R
 import com.example.mymoji.feature.githubuser.domain.usecase.GetGitHubUserUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -25,17 +27,22 @@ class GitHubUserViewModel @Inject constructor(
     private val _uiState = MutableStateFlow<GitHubUserUiState>(GitHubUserUiState.Idle)
     val uiState: StateFlow<GitHubUserUiState> = _uiState.asStateFlow()
 
+    private var searchJob: Job? = null
+
     fun searchUser(username: String) {
         val trimmedUsername = username.trim()
         Timber.d("Trimmed username is $trimmedUsername")
         if (trimmedUsername.isEmpty()) return
 
-        viewModelScope.launch {
+        searchJob?.cancel()
+        searchJob = viewModelScope.launch {
             _uiState.value = GitHubUserUiState.Loading
             try {
                 val user = getGitHubUserUseCase(trimmedUsername)
                 _uiState.value = GitHubUserUiState.Success(user)
                 lastDisplayedItemStore.save(LastDisplayedItem.GitHubUser(user.login))
+            } catch (e: CancellationException) {
+                throw e
             } catch (e: Exception) {
                 Timber.e(e, "Failed to fetch GitHub user '$trimmedUsername'")
                 _uiState.value = GitHubUserUiState.Error(messageRes = e.toMessageRes())

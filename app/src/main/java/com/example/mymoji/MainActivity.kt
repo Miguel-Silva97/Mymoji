@@ -94,6 +94,7 @@ class MainActivity : ComponentActivity() {
                             Screen.Home -> {
                                 HomeScreen(
                                     headerItem = headerItem,
+                                    onHeaderClick = homeViewModel::speakHeaderItem,
                                     uiState = uiState,
                                     gitHubUserUiState = gitHubUserUiState,
                                     onGetEmojiClick = { viewModel.fetchAndPickRandomEmoji() },

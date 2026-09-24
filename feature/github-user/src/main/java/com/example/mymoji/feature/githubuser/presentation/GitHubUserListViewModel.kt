@@ -6,6 +6,7 @@ import com.example.mymoji.feature.githubuser.domain.model.GitHubUser
 import com.example.mymoji.feature.githubuser.domain.usecase.DeleteGitHubUserUseCase
 import com.example.mymoji.feature.githubuser.domain.usecase.GetGitHubUsersUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -28,6 +29,8 @@ class GitHubUserListViewModel @Inject constructor(
             try {
                 val users = getGitHubUsersUseCase()
                 _uiState.value = GitHubUserListUiState.Success(users)
+            } catch (e: CancellationException) {
+                throw e
             } catch (e: Exception) {
                 _uiState.value = GitHubUserListUiState.Error(message = e.localizedMessage ?: "Unknown Error occurred")
             }

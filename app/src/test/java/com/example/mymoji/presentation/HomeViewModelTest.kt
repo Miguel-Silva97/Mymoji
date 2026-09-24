@@ -8,9 +8,11 @@ import com.example.mymoji.feature.emoji.domain.usecase.GetCachedEmojiUseCase
 import com.example.mymoji.feature.githubuser.domain.model.GitHubUser
 import com.example.mymoji.feature.githubuser.domain.repository.GitHubUserRepository
 import com.example.mymoji.feature.githubuser.domain.usecase.GetCachedGitHubUserUseCase
+import com.example.mymoji.speech.TextSpeaker
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -40,14 +42,18 @@ class HomeViewModelTest {
         coEvery { getCachedUser(any()) } returns null
     }
 
+    private val textSpeaker = mockk<TextSpeaker>(relaxed = true)
+
     private val smile = Emoji("smile", "smile.png")
+    private val sweatSmile = Emoji("sad", "sad.png")
     private val wink = Emoji("wink", "wink.png")
     private val mockUSer = GitHubUser(login = "mockUSer", id = 1, avatarUrl = "mockUSer.png")
 
     private fun createViewModel() = HomeViewModel(
         lastDisplayedItemStore = lastDisplayedItemStore,
         getCachedEmojiUseCase = GetCachedEmojiUseCase(emojiRepository),
-        getCachedGitHubUserUseCase = GetCachedGitHubUserUseCase(gitHubUserRepository)
+        getCachedGitHubUserUseCase = GetCachedGitHubUserUseCase(gitHubUserRepository),
+        textSpeaker = textSpeaker
     )
 
     @Before
@@ -55,6 +61,7 @@ class HomeViewModelTest {
         Dispatchers.setMain(UnconfinedTestDispatcher())
         coEvery { emojiRepository.getCachedEmoji("smile") } returns smile
         coEvery { emojiRepository.getCachedEmoji("wink") } returns wink
+        coEvery { emojiRepository.getCachedEmoji("sad") } returns sweatSmile
         coEvery { gitHubUserRepository.getCachedUser("mockUSer") } returns mockUSer
     }
 
@@ -102,5 +109,37 @@ class HomeViewModelTest {
         collect(viewModel)
 
         assertEquals(HeaderItem.EmojiItem(smile), viewModel.headerItem.value)
+    }
+
+    @Test
+    fun `speakHeaderItem reads the emoji name with spaces instead of underscores`() = runTest {
+        history.value = listOf(LastDisplayedItem.Emoji("sad"))
+        val viewModel = createViewModel()
+        collect(viewModel)
+
+        viewModel.speakHeaderItem()
+
+        verify(exactly = 1) { textSpeaker.speak("sad") }
+    }
+
+    @Test
+    fun `speakHeaderItem reads the GitHub username`() = runTest {
+        history.value = listOf(LastDisplayedItem.GitHubUser("mockUSer"))
+        val viewModel = createViewModel()
+        collect(viewModel)
+
+        viewModel.speakHeaderItem()
+
+        verify(exactly = 1) { textSpeaker.speak("mockUSer") }
+    }
+
+    @Test
+    fun `speakHeaderItem says nothing when the header is empty`() = runTest {
+        val viewModel = createViewModel()
+        collect(viewModel)
+
+        viewModel.speakHeaderItem()
+
+        verify(exactly = 0) { textSpeaker.speak(any()) }
     }
 }
