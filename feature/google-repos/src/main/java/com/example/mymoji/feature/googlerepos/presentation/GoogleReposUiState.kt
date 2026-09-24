@@ -11,7 +11,7 @@ data class GoogleReposUiState(
     val repos: List<GitHubRepo> = emptyList(),
     val hasNextPage: Boolean = false,
     val isLoading: Boolean = false,
-    @StringRes val errorMessageRes: Int? = null
+    @param:StringRes val errorMessageRes: Int? = null
 ) {
     val hasPreviousPage: Boolean get() = page > 1
 }

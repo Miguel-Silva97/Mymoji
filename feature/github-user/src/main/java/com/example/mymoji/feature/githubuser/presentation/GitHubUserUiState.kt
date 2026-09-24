@@ -7,5 +7,5 @@ sealed interface GitHubUserUiState {
     object Idle : GitHubUserUiState
     object Loading : GitHubUserUiState
     data class Success(val user: GitHubUser) : GitHubUserUiState
-    data class Error(@StringRes val messageRes: Int) : GitHubUserUiState
+    data class Error(@param:StringRes val messageRes: Int) : GitHubUserUiState
 }

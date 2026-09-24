@@ -14,6 +14,7 @@ import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Test
+import kotlin.time.Duration.Companion.milliseconds
 
 class EmojiRepositoryImplTest {
 
@@ -59,7 +60,7 @@ class EmojiRepositoryImplTest {
         coEvery { emojiDao.getAllEmojis() } answers { stored }
         coEvery { emojiDao.insertAll(any()) } answers { stored = firstArg() }
         coEvery { apiService.getEmojis() } coAnswers {
-            delay(100)
+            delay(100.milliseconds)
             mapOf("smile" to "smile.png")
         }
 

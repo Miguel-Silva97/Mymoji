@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Mymoji</string>
+    <string name="app_name" translatable="false">Mymoji</string>
     <string name="home_title">Mymoji Explorer</string>
     <string name="menu_random_emoji">Random Emoji</string>
     <string name="menu_emoji_list">Emoji List</string>

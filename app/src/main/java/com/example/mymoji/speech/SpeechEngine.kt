@@ -20,7 +20,7 @@ fun interface SpeechEngineFactory {
 }
 
 class TextToSpeechEngineFactory @Inject constructor(
-    @ApplicationContext private val context: Context
+    @param:ApplicationContext private val context: Context
 ) : SpeechEngineFactory {
 
     override fun create(onInit: (status: Int) -> Unit, onServiceError: () -> Unit): SpeechEngine {
